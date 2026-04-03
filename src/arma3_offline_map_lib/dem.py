@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 
     from numpy.typing import NDArray
 
-ESRI_ASCII_HEADER_PARAMETERS = {
+_ESRI_ASCII_HEADER_PARAMETERS = {
     # ref https://desktop.arcgis.com/en/arcmap/latest/manage-data/raster-and-images/esri-ascii-raster-format.htm
     "NCOLS": "Number of cell columns",  # Integer greater than 0.
     "NROWS": "Number of cell rows",  # Integer greater than 0.
@@ -57,11 +57,11 @@ class DEM:
         with gzip.open(file_path, "rt") as file:
             # `np.loadtxt(file)` does handle gzipped files, but we need the headers
             header_lines = [
-                next(file) for _ in range(len(ESRI_ASCII_HEADER_PARAMETERS))
+                next(file) for _ in range(len(_ESRI_ASCII_HEADER_PARAMETERS))
             ]
             for line in header_lines:
                 elements = line.split(" ", 1)
-                if elements[0].upper() in ESRI_ASCII_HEADER_PARAMETERS:
+                if elements[0].upper() in _ESRI_ASCII_HEADER_PARAMETERS:
                     header[elements[0].upper()] = float(elements[1])
 
             data_array = np.loadtxt(file, dtype="float16")
