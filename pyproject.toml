@@ -6,6 +6,7 @@ readme = "README.md"
 authors = [
     { name = "recreational-projects", email = "205627218+recreational-projects@users.noreply.github.com" }
 ]
+urls = { "source" = "https://github.com/recreational-projects/arma3-offline-map-lib" }
 requires-python = ">=3.11"
 dependencies = [
     "numpy>=2.4.4",
