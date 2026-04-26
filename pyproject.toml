@@ -1,7 +1,7 @@
 [project]
 name = "arma3-offline-map-lib"
 version = "0.2.0"
-description = "Add your description here"
+description = "Code shared between Arma 3 mapping projects."
 readme = "README.md"
 authors = [
     { name = "recreational-projects", email = "205627218+recreational-projects@users.noreply.github.com" }

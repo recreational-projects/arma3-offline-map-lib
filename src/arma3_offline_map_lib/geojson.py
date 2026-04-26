@@ -1,5 +1,7 @@
 """Partial implementation of GeoJSON spec.
 
+Sufficient for [grad_meh](https://github.com/gruppe-adler/grad_meh) data.
+
 Derived from https://jcristharif.com/msgspec/examples/geojson.html.
 """
 

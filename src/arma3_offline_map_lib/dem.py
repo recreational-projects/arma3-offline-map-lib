@@ -31,7 +31,7 @@ _ESRI_ASCII_HEADER_PARAMETERS = {
 class DEM:
     """Digital Elevation Model class.
 
-    Quick and dirty implementation.
+    Sufficient for [grad_meh](https://github.com/gruppe-adler/grad_meh) data.
     """
 
     elevation: NDArray[np.float16]
@@ -39,12 +39,15 @@ class DEM:
 
     @property
     def data_size(self) -> IntPoint2D:
-        """Return data dimensions."""
+        """Return data dimensions.
+
+        Equivalent to ESRI ASCII `ncols, nrows`.
+        """
         return IntPoint2D(self.elevation.shape[0], self.elevation.shape[1])
 
     @property
     def extents(self) -> IntPoint2D:
-        """Return actual dimensions."""
+        """Return physical dimensions in meters."""
         return IntPoint2D(
             self.cell_size * self.elevation.shape[0],
             self.cell_size * self.elevation.shape[1],
