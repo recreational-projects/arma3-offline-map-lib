@@ -9,6 +9,7 @@ from typing import TYPE_CHECKING, Self
 import numpy as np
 
 from .int_point_2d import IntPoint2D
+from .point_2d import Point2D
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -46,11 +47,11 @@ class DEM:
         return IntPoint2D(self.elevation.shape[0], self.elevation.shape[1])
 
     @property
-    def extents(self) -> IntPoint2D:
+    def extents(self) -> Point2D:
         """Return physical dimensions in meters."""
-        return IntPoint2D(
-            self.cell_size * self.elevation.shape[0],
-            self.cell_size * self.elevation.shape[1],
+        return Point2D(
+            self.cell_size * self.data_size.x,
+            self.cell_size * self.data_size.y,
         )
 
     @classmethod
