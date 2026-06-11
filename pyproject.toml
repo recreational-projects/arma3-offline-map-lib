@@ -21,7 +21,7 @@ build-backend = "uv_build"
 [dependency-groups]
 dev = [
     "pdoc>=16.0.0",
-    "ruff>=0.15.12",
+    "ruff>=0.15.16",
 ]
 
 [tool.ruff.lint]
@@ -30,6 +30,9 @@ select = ["ALL"]
 
 ignore = [
     "COM812", # missing-trailing-comma: conflicts with formatter
+]
+extend-safe-fixes = [
+    "TC", # flake8-type-checking
 ]
 
 [tool.ruff.lint.pydocstyle]

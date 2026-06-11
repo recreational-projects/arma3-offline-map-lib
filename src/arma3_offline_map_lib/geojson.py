@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 LOGGER = logging.getLogger(__name__)
 
 type _DictNode = dict[str, Any]
-type _Position = tuple[float, float]
+type Position = tuple[float, float]
 
 
 def geojson_gz_files_in_dir(path: Path) -> list[Path]:
@@ -46,7 +46,7 @@ def load_features_from_file(path: Path) -> list[Feature]:
 class Feature(msgspec.Struct, tag=True):
     """Feature class."""
 
-    geometry: Point
+    geometry: Geometry
     properties: _DictNode
     id: str | int | None = None
 
@@ -54,4 +54,26 @@ class Feature(msgspec.Struct, tag=True):
 class Point(msgspec.Struct, tag=True):
     """Point Geometry type."""
 
-    coordinates: _Position
+    coordinates: Position
+
+
+class LineString(msgspec.Struct, tag=True):
+    """LineString Geometry type."""
+
+    coordinates: list[Position]
+
+
+class Polygon(msgspec.Struct, tag=True):
+    """Polygon Geometry type."""
+
+    coordinates: list[list[Position]]
+
+
+class MultiPolygon(msgspec.Struct, tag=True):
+    """MultiPolygon Geometry type."""
+
+    coordinates: list[list[list[Position]]]
+
+
+Geometry = Point | LineString | Polygon | MultiPolygon
+# Full implementation needs MultiPoint, MultiLineString, GeometryCollection
