@@ -30,7 +30,7 @@ _ESRI_ASCII_HEADER_PARAMETERS = {
 
 @dataclass(kw_only=True, frozen=True)
 class DEM:
-    """Digital Elevation Model class.
+    """Digital Elevation Model class, storing elevation as a NumPy array.
 
     Sufficient for [grad_meh](https://github.com/gruppe-adler/grad_meh) data.
     """
@@ -53,6 +53,11 @@ class DEM:
             self.cell_size * self.data_size.x,
             self.cell_size * self.data_size.y,
         )
+
+    @property
+    def land(self) -> NDArray[np.bool]:
+        """Return boolean array, where `True` indicates terrain above sea level."""
+        return (self.elevation > 0).astype(bool)
 
     @classmethod
     def from_esri_ascii_raster_gz(cls, file_path: Path) -> Self:
