@@ -12,5 +12,13 @@ class Point2D:
     unlike geojson or pygeojson library.
     """
 
-    x: float = field(validator=validators.instance_of(float))
-    y: float = field(validator=validators.instance_of(float))
+    x: int | float = field(
+        validator=validators.or_(
+            validators.instance_of(int), validators.instance_of(float)
+        )
+    )
+    y: int | float = field(
+        validator=validators.or_(
+            validators.instance_of(int), validators.instance_of(float)
+        )
+    )
