@@ -1,11 +1,11 @@
 """Module containing IntPoint2D class."""
 
-from dataclasses import dataclass
+from attrs import define, field, validators
 
 
-@dataclass(frozen=True)
+@define(frozen=True)
 class IntPoint2D:
     """Simple 2D integer point."""
 
-    x: int
-    y: int
+    x: int = field(validator=validators.instance_of(int))
+    y: int = field(validator=validators.instance_of(int))
