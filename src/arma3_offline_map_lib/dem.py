@@ -59,6 +59,11 @@ class DEM:
         """Return boolean array, where `True` indicates terrain above sea level."""
         return (self.elevation > 0).astype(bool)
 
+    @property
+    def land_area(self) -> float:
+        """Return terrain above sea level in square meters."""
+        return int(np.sum(self.land)) * self.cell_size**2
+
     @classmethod
     def from_esri_ascii_raster_gz(cls, file_path: Path) -> Self:
         """Load an ESRI ASCII raster from a gzipped file."""
