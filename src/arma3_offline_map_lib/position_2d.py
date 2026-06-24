@@ -1,15 +1,13 @@
-"""Module containing Point2D class."""
+"""Module containing Position2D class."""
 
 from attrs import define, field, validators
 
 
 @define(frozen=True)
-class Point2D:
-    """Simple 2D point class.
+class Position2D:
+    """Simple 2D position class.
 
-    Hashable, unlike geojson library.
-    Provides x and y keyword construction and properties,
-    unlike geojson or pygeojson library.
+    Hashable; provides x and y keyword construction and properties.
     """
 
     x: int | float = field(
