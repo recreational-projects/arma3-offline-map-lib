@@ -8,8 +8,8 @@ from typing import TYPE_CHECKING, Self
 
 import numpy as np
 
-from .int_point_2d import IntPoint2D
-from .point_2d import Point2D
+from .int_position_2d import IntPosition2D
+from .position_2d import Position2D
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -39,17 +39,17 @@ class DEM:
     cell_size: float
 
     @property
-    def data_size(self) -> IntPoint2D:
+    def data_size(self) -> IntPosition2D:
         """Return data dimensions.
 
         Equivalent to ESRI ASCII `ncols, nrows`.
         """
-        return IntPoint2D(self.elevation.shape[0], self.elevation.shape[1])
+        return IntPosition2D(self.elevation.shape[0], self.elevation.shape[1])
 
     @property
-    def extents(self) -> Point2D:
+    def extents(self) -> Position2D:
         """Return physical dimensions in meters."""
-        return Point2D(
+        return Position2D(
             self.cell_size * self.data_size.x,
             self.cell_size * self.data_size.y,
         )
