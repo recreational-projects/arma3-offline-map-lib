@@ -41,4 +41,4 @@ class Position2D:
     @classmethod
     def from_geojson_position(cls, position: geojson.Position) -> Self:
         """Construct `Position2D` from GeoJSON `Point`."""
-        return cls(x=position[0], y=position[1])
+        return cls(x=position[1], y=position[0])
