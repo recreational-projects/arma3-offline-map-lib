@@ -32,6 +32,7 @@ select = ["ALL"]
 
 ignore = [
     "COM812", # missing-trailing-comma: conflicts with formatter
+    "D205", # don't require 1-line summary
 ]
 extend-safe-fixes = [
     "TC", # flake8-type-checking

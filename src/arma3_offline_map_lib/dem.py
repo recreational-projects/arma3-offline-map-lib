@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import gzip
-from dataclasses import dataclass
 from typing import TYPE_CHECKING, Self
 
 import numpy as np
+from attrs import define
 
 from .int_position_2d import IntPosition2D
 from .position_2d import Position2D
@@ -28,7 +28,7 @@ _ESRI_ASCII_HEADER_PARAMETERS = {
 }
 
 
-@dataclass(kw_only=True, frozen=True)
+@define(kw_only=True, frozen=True)
 class DEM:
     """Digital Elevation Model class, storing elevation as a NumPy array.
 
