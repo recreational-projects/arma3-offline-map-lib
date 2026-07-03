@@ -21,9 +21,10 @@ build-backend = "uv_build"
 [dependency-groups]
 dev = [
     "pdoc>=16.0.0",
-    "pyrefly>=1.1.1",
+    "pre-commit>=4.6.1",
+    "pyrefly>=1.2.0",
     "pytest>=9.1.1",
-    "ruff>=0.15.19",
+    "ruff>=0.16.1",
 ]
 
 [tool.ruff.lint]
@@ -32,6 +33,7 @@ select = ["ALL"]
 
 ignore = [
     "COM812", # missing-trailing-comma: conflicts with formatter
+    "CPY001", # missing-copyright-notice
     "D205", # don't require 1-line summary
 ]
 extend-safe-fixes = [
