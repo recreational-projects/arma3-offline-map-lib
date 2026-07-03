@@ -19,4 +19,5 @@ def test_create_from_float() -> None:
     # arrange
     # act, assert
     with pytest.raises(TypeError):
+        # pyrefly: ignore [bad-argument-type]
         _p = IntPosition2D(x=-0.3, y=4.776765)
