@@ -32,7 +32,8 @@ class Position2D:
 
     @classmethod
     def from_a3_position(cls, seq: Sequence[float]) -> Self:
-        """Construct `Position2D` from Arma 3 position, which has xy and xzy forms.
+        """Construct `Position2D` from an Arma 3 internal position,
+        which has (x, y) and (x, z, y) forms.
 
         Use when e.g. parsing `mission.sqm`.
         """
@@ -40,5 +41,5 @@ class Position2D:
 
     @classmethod
     def from_geojson_position(cls, position: geojson.Position) -> Self:
-        """Construct `Position2D` from GeoJSON `Point`."""
-        return cls(x=position[1], y=position[0])
+        """Construct `Position2D` from GeoJSON `Point` which has (lon, lat) form."""
+        return cls(x=position[0], y=position[1])
