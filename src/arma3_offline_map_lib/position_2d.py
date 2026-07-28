@@ -12,11 +12,11 @@ if TYPE_CHECKING:
     from . import geojson
 
 
-@define(frozen=True)
+@define(kw_only=True, frozen=True)
 class Position2D:
     """Simple 2D position class.
 
-    Hashable; provides x and y keyword construction and properties.
+    Hashable; keyword-only args.
     """
 
     x: int | float = field(

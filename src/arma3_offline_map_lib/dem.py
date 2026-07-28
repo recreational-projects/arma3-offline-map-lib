@@ -44,14 +44,14 @@ class DEM:
 
         Equivalent to ESRI ASCII `ncols, nrows`.
         """
-        return IntPosition2D(self.elevation.shape[0], self.elevation.shape[1])
+        return IntPosition2D(x=self.elevation.shape[0], y=self.elevation.shape[1])
 
     @property
     def extents(self) -> Position2D:
         """Return physical dimensions in meters."""
         return Position2D(
-            self.cell_size * self.data_size.x,
-            self.cell_size * self.data_size.y,
+            x=self.cell_size * self.data_size.x,
+            y=self.cell_size * self.data_size.y,
         )
 
     @property

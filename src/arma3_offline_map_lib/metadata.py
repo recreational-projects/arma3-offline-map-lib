@@ -55,7 +55,7 @@ class Metadata:
             author=data_["author"],
             display_name=data_["displayName"],
             world_size=data_["worldSize"],
-            grid_offset=Position2D(data_["gridOffsetX"], data_["gridOffsetY"]),
+            grid_offset=Position2D(x=data_["gridOffsetX"], y=data_["gridOffsetY"]),
             elevation_offset=data_["elevationOffset"],
             version=data_["version"],
         )

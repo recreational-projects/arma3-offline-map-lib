@@ -9,7 +9,7 @@ def test_create_from_int() -> None:
     """Test creating from int."""
     # arrange
     # act
-    p = IntPosition2D(1, 2)
+    p = IntPosition2D(x=1, y=2)
     # assert
     assert p
 
@@ -19,4 +19,4 @@ def test_create_from_float() -> None:
     # arrange
     # act, assert
     with pytest.raises(TypeError):
-        _p = IntPosition2D(-0.3, 4.776765)
+        _p = IntPosition2D(x=-0.3, y=4.776765)
