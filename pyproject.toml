@@ -50,3 +50,6 @@ convention = "google"
 
 [tool.pyrefly]
 project-includes = ["**/*.py*"]
+
+[tool.uv]
+resolution = "lowest-direct"
