@@ -2,12 +2,22 @@
 
 Code shared between `recreational-projects` Arma 3 mapping projects.
 
-Reads data produced by [grad_meh](https://github.com/gruppe-adler/grad_meh).
+Handles data produced by [grad_meh](https://github.com/gruppe-adler/grad_meh).
 
 ## Install
 
+Install from GitHub, specifying a version, e.g:
+
 ```shell
-pip install git+https://github.com/recreational-projects/arma3-offline-map-lib.git@v0.1.0
-# or
-uv add git+https://github.com/recreational-projects/arma3-offline-map-lib.git@v0.1.0
+pip install git+https://github.com/recreational-projects/arma3-offline-map-lib.git@v0.8.0
+```
+or
+```shell
+uv add git+https://github.com/recreational-projects/arma3-offline-map-lib.git@v0.8.0
+```
+
+## Documentation
+
+```shell
+uv run pdoc src/arma3_offline_map_lib
 ```
