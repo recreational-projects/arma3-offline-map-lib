@@ -12,6 +12,7 @@ dependencies = [
     "attrs>=26.1.0",
     "msgspec>=0.21.1",
     "numpy>=2.4.4",
+    "pillow>=12.3.0",
 ]
 
 [build-system]
@@ -24,7 +25,7 @@ dev = [
     "pre-commit>=4.6.2",
     "pyrefly>=1.2.0",
     "pytest>=9.1.1",
-    "ruff>=0.16.3",
+    "ruff>=0.16.5",
 ]
 
 [tool.ruff.lint]
