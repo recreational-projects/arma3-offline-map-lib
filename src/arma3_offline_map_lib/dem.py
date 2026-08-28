@@ -7,6 +7,7 @@ from typing import TYPE_CHECKING, Self
 
 import numpy as np
 from attrs import define
+from PIL import Image, ImageOps
 
 from .int_position_2d import IntPosition2D
 from .position_2d import Position2D
@@ -26,6 +27,9 @@ _ESRI_ASCII_HEADER_PARAMETERS = {
     "NODATA_VALUE": "The input values to be NoData in the output raster",
     # Optional in spec. Default is -9999.
 }
+
+_WHITE = (255, 255, 255)
+_BLACK = (0, 0, 0)
 
 
 @define(kw_only=True, frozen=True)
@@ -84,3 +88,16 @@ class DEM:
             elevation=data_array,
             cell_size=header["CELLSIZE"],
         )
+
+    def render_land_sea_image(
+        self,
+        *,
+        path: Path,
+        land_color: tuple[int, int, int],
+        sea_color: tuple[int, int, int],
+    ) -> None:
+        """Render a land/sea boolean array to an image file."""
+        onebit_im = Image.fromarray(self.land)
+        grayscale_im = onebit_im.convert(mode="L")
+        color_im = ImageOps.colorize(grayscale_im, black=sea_color, white=land_color)
+        color_im.save(path)
