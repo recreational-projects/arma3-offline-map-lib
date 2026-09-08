@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING, Self
 from attrs import define, field
 from attrs.validators import instance_of
 
-from arma3_offline_map_lib.grad_meh.position_2d import Position2D
+from arma3_offline_map_lib.position_2d import Position2D
 
 if TYPE_CHECKING:
     from pathlib import Path

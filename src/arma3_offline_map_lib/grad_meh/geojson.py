@@ -14,10 +14,10 @@ from typing import TYPE_CHECKING
 
 import msgspec
 
+from arma3_offline_map_lib.types_ import DictNode
+
 if TYPE_CHECKING:
     from pathlib import Path
-
-    from arma3_offline_map_lib.types_ import DictNode
 
 type Position = tuple[float, float]
 

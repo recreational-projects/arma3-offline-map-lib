@@ -9,15 +9,15 @@ from typing import TYPE_CHECKING, Self
 
 import numpy as np
 from attrs import define
+from numpy.typing import NDArray
 from PIL import Image, ImageOps
 
 from arma3_offline_map_lib.grad_meh.int_position_2d import IntPosition2D
-from arma3_offline_map_lib.grad_meh.position_2d import Position2D
+from arma3_offline_map_lib.position_2d import Position2D
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from numpy.typing import NDArray
 
 _ESRI_ASCII_HEADER_PARAMETERS = {
     "NCOLS": "Number of cell columns",  # Integer greater than 0.
