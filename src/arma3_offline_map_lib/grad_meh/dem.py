@@ -1,4 +1,6 @@
-"""Module containing DEM class."""
+"""Provides an interface for Arma 3 digital elevation data
+exported by [`gruppe-adler/grad_meh`](https://github.com/gruppe-adler/grad_meh).
+"""
 
 from __future__ import annotations
 
@@ -9,8 +11,8 @@ import numpy as np
 from attrs import define
 from PIL import Image, ImageOps
 
-from .int_position_2d import IntPosition2D
-from .position_2d import Position2D
+from arma3_offline_map_lib.grad_meh.int_position_2d import IntPosition2D
+from arma3_offline_map_lib.grad_meh.position_2d import Position2D
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -18,7 +20,6 @@ if TYPE_CHECKING:
     from numpy.typing import NDArray
 
 _ESRI_ASCII_HEADER_PARAMETERS = {
-    # ref https://desktop.arcgis.com/en/arcmap/latest/manage-data/raster-and-images/esri-ascii-raster-format.htm
     "NCOLS": "Number of cell columns",  # Integer greater than 0.
     "NROWS": "Number of cell rows",  # Integer greater than 0.
     "XLLCORNER": "X-coordinate of the origin (by lower left corner of the cell)",
@@ -36,23 +37,25 @@ _BLACK = (0, 0, 0)
 class DEM:
     """Digital Elevation Model class, storing elevation as a NumPy array.
 
-    Sufficient for [grad_meh](https://github.com/gruppe-adler/grad_meh) data.
+    Ref: https://desktop.arcgis.com/en/arcmap/latest/manage-data/raster-and-images/esri-ascii-raster-format.htm
     """
 
     elevation: NDArray[np.float16]
+    """Elevation data."""
     cell_size: float
+    """Equivalent to ESRI ASCII `CELLSIZE`."""
 
     @property
     def data_size(self) -> IntPosition2D:
-        """Return data dimensions.
+        """Data dimensions.
 
-        Equivalent to ESRI ASCII `ncols, nrows`.
+        Equivalent to ESRI ASCII `NCOLS`, `NROWS`.
         """
         return IntPosition2D(x=self.elevation.shape[0], y=self.elevation.shape[1])
 
     @property
     def extents(self) -> Position2D:
-        """Return physical dimensions in meters."""
+        """Physical dimensions in meters."""
         return Position2D(
             x=self.cell_size * self.data_size.x,
             y=self.cell_size * self.data_size.y,
@@ -60,17 +63,19 @@ class DEM:
 
     @property
     def land(self) -> NDArray[np.bool]:
-        """Return boolean array, where `True` indicates terrain above sea level."""
+        """Boolean array, where `True` indicates terrain above sea level."""
         return (self.elevation > 0).astype(bool)
 
     @property
     def land_area(self) -> float:
-        """Return terrain above sea level in square meters."""
+        """Area of terrain above sea level in square meters."""
         return int(np.sum(self.land)) * self.cell_size**2
 
     @classmethod
     def from_esri_ascii_raster_gz(cls, file_path: Path) -> Self:
-        """Load an ESRI ASCII raster from a gzipped file."""
+        """Load an ESRI ASCII raster from a gzipped file (`*.asc.gz`),
+        as exported by `gruppe-adler/grad_meh`.
+        """
         header = {}
         with gzip.open(file_path, "rt") as file:
             # `np.loadtxt(file)` does handle gzipped files, but we need the headers
@@ -89,14 +94,16 @@ class DEM:
             cell_size=header["CELLSIZE"],
         )
 
-    def render_land_sea_image(
+    def export_land_sea_image(
         self,
         *,
         path: Path,
         land_color: tuple[int, int, int],
         sea_color: tuple[int, int, int],
     ) -> None:
-        """Render a land/sea boolean array to an image file."""
+        """Export a image file,
+        where land pixels are `land_color` and sea pixels are colored `sea_color`.
+        """
         onebit_im = Image.fromarray(self.land)
         grayscale_im = onebit_im.convert(mode="L")
         color_im = ImageOps.colorize(grayscale_im, black=sea_color, white=land_color)

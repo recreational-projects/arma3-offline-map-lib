@@ -1,25 +1,27 @@
-"""Partial implementation of GeoJSON spec.
+"""Provides an interface for Arma 3 object location GeoJSON data
+exported by [`gruppe-adler/grad_meh`](https://github.com/gruppe-adler/grad_meh).
 
-Sufficient for [grad_meh](https://github.com/gruppe-adler/grad_meh) data.
+Ref: https://github.com/gruppe-adler/grad_meh/blob/master/docs/geojson_spec.md
 
-Derived from https://jcristharif.com/msgspec/examples/geojson.html.
+Classes derived from https://msgspec.dev/examples/geojson.
 """
 
 from __future__ import annotations
 
 import gzip
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 import msgspec
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-LOGGER = logging.getLogger(__name__)
+    from arma3_offline_map_lib.types_ import DictNode
 
-type _DictNode = dict[str, Any]
 type Position = tuple[float, float]
+
+_LOGGER = logging.getLogger(__name__)
 
 
 def geojson_gz_files_in_dir(path: Path) -> list[Path]:
@@ -28,10 +30,11 @@ def geojson_gz_files_in_dir(path: Path) -> list[Path]:
 
 
 def load_features_from_file(path: Path) -> list[Feature]:
-    """Load GeoJSON features from a `.geojson.gz` file.
+    """Load GeoJSON features from a file (`*.geojson.gz`),
+    as exported by `gruppe-adler/grad_meh`.
 
-    NB: grad_meh source files are gzipped JSON arrays of GeoJSON features, not GeoJSON
-    compliant files.
+    NB: These files are gzipped arrays of GeoJSON features,
+    not GeoJSON compliant files.
     """
     with gzip.open(path, "rt", encoding="utf-8") as file:
         try:
@@ -46,34 +49,34 @@ def load_features_from_file(path: Path) -> list[Feature]:
 class Feature(msgspec.Struct, tag=True):
     """Feature class."""
 
+    properties: DictNode
     geometry: Geometry
-    properties: _DictNode
-    id: str | int | None = None
+    _id: str | int | None = None
 
 
 class Point(msgspec.Struct, tag=True):
-    """Point Geometry type."""
+    """Point `Geometry` type."""
 
     coordinates: Position
 
 
 class LineString(msgspec.Struct, tag=True):
-    """LineString Geometry type."""
+    """LineString `Geometry` type."""
 
     coordinates: list[Position]
 
 
 class Polygon(msgspec.Struct, tag=True):
-    """Polygon Geometry type."""
+    """Polygon `Geometry` type."""
 
     coordinates: list[list[Position]]
 
 
 class MultiPolygon(msgspec.Struct, tag=True):
-    """MultiPolygon Geometry type."""
+    """MultiPolygon `Geometry` type."""
 
     coordinates: list[list[list[Position]]]
 
 
 Geometry = Point | LineString | Polygon | MultiPolygon
-# Full implementation needs MultiPoint, MultiLineString, GeometryCollection
+# Full GeoJSON implementation needs MultiPoint, MultiLineString, GeometryCollection

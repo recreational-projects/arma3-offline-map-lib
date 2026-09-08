@@ -1,6 +1,6 @@
 """Tests for `Position2D` class."""
 
-from arma3_offline_map_lib.position_2d import Position2D
+from arma3_offline_map_lib.grad_meh.position_2d import Position2D
 
 
 def test_create_from_float_and_int() -> None:

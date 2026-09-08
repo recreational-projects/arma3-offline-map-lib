@@ -2,7 +2,7 @@
 
 import pytest
 
-from arma3_offline_map_lib.int_position_2d import IntPosition2D
+from arma3_offline_map_lib.grad_meh.int_position_2d import IntPosition2D
 
 
 def test_create_from_int() -> None:
