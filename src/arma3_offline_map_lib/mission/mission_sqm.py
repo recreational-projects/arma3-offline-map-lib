@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Self
+from typing import TYPE_CHECKING, Literal, Self
 
 import armaclass
 from attrs import define
@@ -23,9 +23,7 @@ class MissionSqm:
     """Data from a mission's `mission.sqm` file."""
 
     markers: list[Marker]
-    """Markers from all layers.
-
-    Excludes any with missing `name` or `position` value."""
+    """Markers from all layers."""
 
     @classmethod
     def from_file(cls, filepath: Path) -> Self:
@@ -43,40 +41,34 @@ class Marker:
     """Represents a map marker."""
 
     name: str
+    """Corresponds to 'Variable Name' in the editor."""
     position: Position2D
+    """NB: markers don't have a settable Z (height) position in the editor."""
+    marker_type: Literal["ELLIPSE", "RECTANGLE"] | None
+    """Area markers have a value; icon markers have `None`."""
+    type_: str
+    """For area markers, same as `marker_type`, but lowercase."""
 
     @classmethod
-    def from_mission_sqm_data(cls, data: DictNode) -> Self:
+    def from_data(cls, data: DictNode) -> Self:
         """Construct `Marker` from data parsed from `mission.sqm`."""
-        name_ = data.get("name")
-        position_ = data.get("position")
-        if name_ is None:
-            err_msg = "Marker name is missing"
-            raise ValueError(err_msg)
-
-        if position_ is None:
-            err_msg = "Marker position is missing"
+        if data["dataType"] != "Marker":
+            err_msg = "Can't construct Marker from non-marker data."
             raise ValueError(err_msg)
 
         return cls(
             name=data["name"],
-            position=Position2D.from_a3_position(position_),
+            position=Position2D.from_a3_position(data["position"]),
+            marker_type=data.get("markerType"),
+            type_=data["type"],
         )
 
 
 def _collect_markers(node: DictNode) -> list[Marker]:
-    """Return `node`'s relevant descendants as `Marker`s, recursively.
-
-    NB: ignores markers with missing `name` or `position` value.
-    """
-    markers = []
-    for e in _get_entities(node):
-        try:
-            marker = Marker.from_mission_sqm_data(e)
-            markers.append(marker)
-        except ValueError:
-            continue
-
+    """Return `Marker` descendents of `node`, recursively."""
+    markers = [
+        Marker.from_data(e) for e in _get_entities(node) if e["dataType"] == "Marker"
+    ]
     for layer_node in _get_child_layers(node):
         markers.extend(_collect_markers(layer_node))
 
