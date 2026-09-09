@@ -48,6 +48,7 @@ runtime-evaluated-decorators = ["attrs.define"]
 
 [tool.ruff.lint.per-file-ignores]
 "test_*.py" = [
+    "PLR2004", # magic-value-comparison
     "S101", # assert
 ]
 
