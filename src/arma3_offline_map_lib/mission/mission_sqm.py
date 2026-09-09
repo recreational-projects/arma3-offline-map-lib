@@ -23,24 +23,18 @@ class MissionSqm:
     """Data from a mission's `mission.sqm` file."""
 
     markers: list[Marker]
-    """Markers from the file, excluding any with missing `name` or `position` value."""
+    """Markers from all layers.
+
+    Excludes any with missing `name` or `position` value."""
 
     @classmethod
-    def from_file(cls, filepath: Path) -> Self | None:
-        """Parse a `mission.sqm` file."""
+    def from_file(cls, filepath: Path) -> Self:
+        """Parse a `mission.sqm` file. Must not be binarized."""
         with filepath.open(errors="ignore") as f:
             data = f.read()
 
-        try:
-            mission = armaclass.parse(data)
-            log_msg = f"Parsed `{filepath}`."
-            _LOGGER.debug(log_msg)
-        except armaclass.ParseError:
-            log_msg = f"Couldn't parse `{filepath}`; may be binarized."
-            _LOGGER.warning(log_msg)
-            return None
-
-        markers_ = _collect_markers(mission["Mission"])
+        mission_sqm_data = armaclass.parse(data)
+        markers_ = _collect_markers(mission_sqm_data["Mission"])
         return cls(markers=markers_)
 
 
