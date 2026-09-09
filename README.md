@@ -2,7 +2,8 @@
 
 Code shared between `recreational-projects` Arma 3 mapping projects.
 
-Handles data produced by [gruppe-adler/grad_meh](https://github.com/gruppe-adler/grad_meh).
+* Handles map data produced by [gruppe-adler/grad_meh](https://github.com/gruppe-adler/grad_meh).
+* Parses mission markers from a `mission.sqm` file
 
 ## Install
 
