@@ -8,12 +8,14 @@ import gzip
 from typing import TYPE_CHECKING, Self
 
 import numpy as np
-from attrs import define
+from attrs import define, field
+from attrs.validators import gt
 from numpy.typing import NDArray
 from PIL import Image, ImageOps
 
-from arma3_offline_map_lib.grad_meh.int_position_2d import IntPosition2D
 from arma3_offline_map_lib.position_2d import Position2D
+
+from .int_position_2d import IntPosition2D
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -29,20 +31,19 @@ _ESRI_ASCII_HEADER_PARAMETERS = {
     # Optional in spec. Default is -9999.
 }
 
-_WHITE = (255, 255, 255)
-_BLACK = (0, 0, 0)
-
 
 @define(kw_only=True, frozen=True)
 class DEM:
     """Digital Elevation Model class, storing elevation as a NumPy array.
 
     Ref: https://desktop.arcgis.com/en/arcmap/latest/manage-data/raster-and-images/esri-ascii-raster-format.htm
+
+    Handles non-square rasters, although Arma 3 does not support them.
     """
 
     elevation: NDArray[np.float16]
     """Elevation data."""
-    cell_size: float
+    cell_size: float = field(validator=gt(0))
     """Equivalent to ESRI ASCII `CELLSIZE`."""
 
     @property
@@ -51,7 +52,7 @@ class DEM:
 
         Equivalent to ESRI ASCII `NCOLS`, `NROWS`.
         """
-        return IntPosition2D(x=self.elevation.shape[0], y=self.elevation.shape[1])
+        return IntPosition2D(x=self.elevation.shape[1], y=self.elevation.shape[0])
 
     @property
     def extents(self) -> Position2D:
@@ -62,7 +63,7 @@ class DEM:
         )
 
     @property
-    def land(self) -> NDArray[np.bool]:
+    def land(self) -> NDArray[np.bool_]:
         """Boolean array, where `True` indicates terrain above sea level."""
         return (self.elevation > 0).astype(bool)
 
@@ -88,6 +89,12 @@ class DEM:
                     header[elements[0].upper()] = float(elements[1])
 
             data_array = np.loadtxt(file, dtype="float16")
+            if (header["NROWS"], header["NCOLS"]) != data_array.shape:
+                err_msg = (
+                    f"Data array shape ({data_array.shape})"
+                    f"does not match header ({header['NROWS'], header['NCOLS']})"
+                )
+                raise ValueError(err_msg)
 
         return cls(
             elevation=data_array,
@@ -101,7 +108,7 @@ class DEM:
         land_color: tuple[int, int, int],
         sea_color: tuple[int, int, int],
     ) -> None:
-        """Export a image file,
+        """Export an image file,
         where land pixels are `land_color` and sea pixels are colored `sea_color`.
         """
         onebit_im = Image.fromarray(self.land)
