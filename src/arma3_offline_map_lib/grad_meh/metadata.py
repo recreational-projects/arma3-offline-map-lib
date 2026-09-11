@@ -20,8 +20,10 @@ if TYPE_CHECKING:
 
 @define(kw_only=True, frozen=True)
 class Metadata:
-    """Partial support for [grad_meh](https://github.com/gruppe-adler/grad_meh)
-    'meta.json'.
+    """Support for metadata exported as 'meta.json'
+    by [grad_meh](https://github.com/gruppe-adler/grad_meh).
+
+    Ref: https://github.com/gruppe-adler/grad_meh/blob/master/docs/metajson_spec.md
     """
 
     world_name: str = field(validator=instance_of(str))
@@ -30,14 +32,20 @@ class Metadata:
     """Map author."""
     display_name: str = field(validator=instance_of(str))
     """Display name."""
-    world_size: int = field(validator=instance_of(int))
-    """Size of map in meters."""
-    grid_offset: Position2D
-    """Offset (in m) of grid origin."""
     elevation_offset: float = field(validator=instance_of(float))
     """Offset (in m) of DEM values from 0 ASL."""
+    grid_offset: Position2D
+    """Offset (in m) of grid origin."""
+    latitude: float = field(validator=instance_of(float))
+    """Latitude of map."""
+    longitude: float = field(validator=instance_of(float))
+    """Longitude of map."""
     version: str = field(validator=instance_of(str))
     """Version of `grad_meh`."""
+    world_size: int = field(validator=instance_of(int))
+    """Size of map in meters."""
+
+    # unsupported attributes: grids, colorOutside
 
     @classmethod
     def from_file(cls, path: Path) -> Self:
@@ -55,6 +63,8 @@ class Metadata:
             display_name=data_["displayName"],
             world_size=data_["worldSize"],
             grid_offset=Position2D(x=data_["gridOffsetX"], y=data_["gridOffsetY"]),
+            latitude=data_["latitude"],
+            longitude=data_["longitude"],
             elevation_offset=data_["elevationOffset"],
             version=data_["version"],
         )
