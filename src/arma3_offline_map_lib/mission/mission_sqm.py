@@ -6,7 +6,8 @@ import logging
 from typing import TYPE_CHECKING, Literal, Self
 
 import armaclass
-from attrs import define
+from attrs import define, field
+from attrs.validators import in_, instance_of, optional
 
 from arma3_offline_map_lib.position_2d import Position2D
 
@@ -40,13 +41,15 @@ class MissionSqm:
 class Marker:
     """Represents a map marker."""
 
-    name: str
+    name: str = field(validator=instance_of(str))
     """Corresponds to 'Variable Name' in the editor."""
     position: Position2D
     """NB: markers don't have a settable Z (height) position in the editor."""
-    marker_type: Literal["ELLIPSE", "RECTANGLE"] | None
+    marker_type: Literal["ELLIPSE", "RECTANGLE"] | None = field(
+        validator=optional(in_({"ELLIPSE", "RECTANGLE"}))
+    )
     """Area markers have a value; icon markers have `None`."""
-    type_: str
+    type_: str = field(validator=instance_of(str))
     """For area markers, same as `marker_type`, but lowercase."""
 
     @classmethod

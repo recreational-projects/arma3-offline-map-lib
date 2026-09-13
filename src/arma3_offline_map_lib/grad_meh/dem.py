@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING, Self
 
 import numpy as np
 from attrs import define, field
-from attrs.validators import gt
+from attrs.validators import gt, instance_of
 from numpy.typing import NDArray
 from PIL import Image, ImageOps
 
@@ -43,7 +43,7 @@ class DEM:
 
     elevation: NDArray[np.float16]
     """Elevation data."""
-    cell_size: float = field(validator=gt(0))
+    cell_size: float = field(validator=[instance_of(float), gt(0)])
     """Equivalent to ESRI ASCII `CELLSIZE`."""
 
     @property
