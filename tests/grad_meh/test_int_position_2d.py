@@ -5,7 +5,7 @@ import pytest
 from arma3_offline_map_lib.grad_meh.int_position_2d import IntPosition2D
 
 
-def test_create_from_int() -> None:
+def test_create_happy_path() -> None:
     """Test creating from int."""
     # arrange
     # act
@@ -14,7 +14,7 @@ def test_create_from_int() -> None:
     assert p
 
 
-def test_create_from_float() -> None:
+def test_create_from_float_raises_exception() -> None:
     """Test creating from float."""
     # arrange
     # act, assert

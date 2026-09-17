@@ -3,7 +3,7 @@
 from arma3_offline_map_lib.position_2d import Position2D
 
 
-def test_create_from_float_and_int() -> None:
+def test_create_happy_path() -> None:
     """Test creating from float and int."""
     # arrange
     # act
