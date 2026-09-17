@@ -10,7 +10,7 @@ import json
 from typing import TYPE_CHECKING, Self
 
 from attrs import define, field
-from attrs.validators import instance_of
+from attrs.validators import deep_iterable, instance_of, le, max_len, min_len
 
 from arma3_offline_map_lib.position_2d import Position2D
 
@@ -42,10 +42,18 @@ class Metadata:
     """Longitude of map."""
     version: str = field(validator=instance_of(str))
     """Version of `grad_meh`."""
+    color_outside: tuple[float, float, float, float] | None = field(
+        default=None,
+        validator=deep_iterable(
+            member_validator=(instance_of(float), le(1)),
+            iterable_validator=(instance_of(tuple), min_len(4), max_len(4)),
+        ),
+    )
+    """Outside color of map."""
     world_size: int = field(validator=instance_of(int))
     """Size of map in meters."""
 
-    # unsupported attributes: grids, colorOutside
+    # unsupported attributes: grids
 
     @classmethod
     def from_file(cls, path: Path) -> Self:
@@ -61,10 +69,11 @@ class Metadata:
             world_name=data_["worldName"],
             author=data_["author"],
             display_name=data_["displayName"],
-            world_size=data_["worldSize"],
             grid_offset=Position2D(x=data_["gridOffsetX"], y=data_["gridOffsetY"]),
             latitude=data_["latitude"],
             longitude=data_["longitude"],
             elevation_offset=data_["elevationOffset"],
             version=data_["version"],
+            color_outside=tuple(data_["colorOutside"]),
+            world_size=data_["worldSize"],
         )
