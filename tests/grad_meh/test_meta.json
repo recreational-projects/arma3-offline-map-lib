@@ -1,12 +1,12 @@
 {
-    "author": "Bohemia Interactive",
+    "author": "The Author",
     "colorOutside": [
         0.2941179871559143,
         0.33333298563957214,
         0.37254899740219116,
         1.0
     ],
-    "displayName": "Stratis",
+    "displayName": "The Terrain",
     "elevationOffset": 0.0,
     "gridOffsetX": 0.0,
     "gridOffsetY": 8192.0,
@@ -39,6 +39,6 @@
     "latitude": -35.09700012207031,
     "longitude": 16.48200035095215,
     "version": "1.0.0-beta.4",
-    "worldName": "stratis",
+    "worldName": "the_terrain",
     "worldSize": 8192
 }
