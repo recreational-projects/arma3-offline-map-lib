@@ -16,8 +16,14 @@ def test_from_file_happy_path() -> None:
     assert m.world_name == "the_terrain"
     assert m.author == "The Author"
     assert m.display_name == "The Terrain"
-    assert m.world_size == 8192
     assert m.grid_offset.x == 0
     assert m.grid_offset.y == 8192
     assert m.elevation_offset == 0.0
     assert m.version == "1.0.0-beta.4"
+    assert m.color_outside == (
+        0.2941179871559143,
+        0.33333298563957214,
+        0.37254899740219116,
+        1.0,
+    )
+    assert m.world_size == 8192
