@@ -20,5 +20,5 @@ uv add git+https://github.com/recreational-projects/arma3-offline-map-lib.git@v0
 ## Documentation
 
 ```shell
-uv run pdoc src/arma3_offline_map_lib
+uv run pdoc arma3_offline_map_lib
 ```
