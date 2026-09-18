@@ -1,4 +1,4 @@
-"""Provides an interface for Arma 3 object location GeoJSON data
+"""Provides an interface for Arma 3 object location GeoJSON-like data
 exported by [`gruppe-adler/grad_meh`](https://github.com/gruppe-adler/grad_meh).
 
 Ref: https://github.com/gruppe-adler/grad_meh/blob/master/docs/geojson_spec.md
@@ -20,20 +20,22 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 type Position = tuple[float, float]
+"""Similar to GeoJSON Position, but meter units instead of degrees.
+Order is `y, x`, like GeoJSON longitude, latitude."""
 
 _LOGGER = logging.getLogger(__name__)
 
 
 def geojson_gz_files_in_dir(path: Path) -> list[Path]:
-    """Return all `*.geojson.gz` files in `path`."""
+    """Return all `*.geojson.gz` files in the directory `path`. Not recursive."""
     return [p for p in list(path.iterdir()) if p.suffixes == [".geojson", ".gz"]]
 
 
 def load_features_from_file(path: Path) -> list[Feature]:
-    """Load GeoJSON features from a file (`*.geojson.gz`),
+    """Load GeoJSON-like features from a file (`*.geojson.gz`),
     as exported by `gruppe-adler/grad_meh`.
 
-    NB: These files are gzipped arrays of GeoJSON features,
+    NB: These files are gzipped arrays of GeoJSON-like features (`Position` differs),
     not GeoJSON compliant files.
     """
     with gzip.open(path, "rt", encoding="utf-8") as file:
@@ -51,6 +53,8 @@ class Feature(msgspec.Struct, tag=True):
 
     properties: DictNode
     geometry: Geometry
+    """Subset of GeoJSON `Geometry` types:
+    no `MultiPoint`, `MultiLineString`, `GeometryCollection`"""
     _id: str | int | None = None
 
 

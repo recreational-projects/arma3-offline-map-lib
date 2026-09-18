@@ -1,4 +1,4 @@
-"""Types."""
+"""Types used within the library."""
 
 from typing import Any
 
