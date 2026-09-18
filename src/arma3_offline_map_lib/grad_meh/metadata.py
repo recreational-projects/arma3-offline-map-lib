@@ -1,7 +1,5 @@
 """Provides an interface for Arma 3 map metadata
 exported by [`gruppe-adler/grad_meh`](https://github.com/gruppe-adler/grad_meh).
-
-Ref: https://github.com/gruppe-adler/grad_meh/blob/master/docs/metajson_spec.md
 """
 
 from __future__ import annotations
@@ -20,44 +18,15 @@ if TYPE_CHECKING:
 
 @define(kw_only=True, frozen=True)
 class Metadata:
-    """Support for metadata exported as 'meta.json'
+    """Support for metadata exported
     by [grad_meh](https://github.com/gruppe-adler/grad_meh).
 
     Ref: https://github.com/gruppe-adler/grad_meh/blob/master/docs/metajson_spec.md
     """
 
-    world_name: str = field(validator=instance_of(str))
-    """ID of map."""
-    author: str = field(validator=instance_of(str))
-    """Map author."""
-    display_name: str = field(validator=instance_of(str))
-    """Display name."""
-    elevation_offset: float = field(validator=instance_of(float))
-    """Offset (in m) of DEM values from 0 ASL."""
-    grid_offset: Position2D
-    """Offset (in m) of grid origin."""
-    latitude: float = field(validator=instance_of(float))
-    """Latitude of map."""
-    longitude: float = field(validator=instance_of(float))
-    """Longitude of map."""
-    version: str = field(validator=instance_of(str))
-    """Version of `grad_meh`."""
-    color_outside: tuple[float, float, float, float] | None = field(
-        default=None,
-        validator=deep_iterable(
-            member_validator=(instance_of(float), le(1)),
-            iterable_validator=(instance_of(tuple), min_len(4), max_len(4)),
-        ),
-    )
-    """Outside color of map."""
-    world_size: int = field(validator=instance_of(int))
-    """Size of map in meters."""
-
-    # unsupported attributes: grids
-
     @classmethod
     def from_file(cls, path: Path) -> Self:
-        """Return an instance from a 'meta.json' file,
+        """Return an instance from a `meta.json` file,
         as exported by `gruppe-adler/grad_meh`.
 
         File must exist.
@@ -77,3 +46,35 @@ class Metadata:
             color_outside=tuple(data_["colorOutside"]),
             world_size=data_["worldSize"],
         )
+
+    world_name: str = field(validator=instance_of(str))
+    """ID of map."""
+    author: str = field(validator=instance_of(str))
+    """Map author."""
+    display_name: str = field(validator=instance_of(str))
+    """Map display name."""
+    elevation_offset: float = field(validator=instance_of(float))
+    """Offset in meters of DEM values from 0 ASL."""
+    grid_offset: Position2D
+    """Offset in meters of grid origin."""
+    latitude: float = field(validator=instance_of(float))
+    """Latitude of map."""
+    longitude: float = field(validator=instance_of(float))
+    """Longitude of map."""
+    version: str = field(validator=instance_of(str))
+    """Version of [`gruppe-adler/grad_meh`](https://github.com/gruppe-adler/grad_meh)
+    that exported the metadata."""
+    color_outside: tuple[float, float, float, float] | None = field(
+        default=None,
+        validator=deep_iterable(
+            member_validator=(instance_of(float), le(1)),
+            iterable_validator=(instance_of(tuple), min_len(4), max_len(4)),
+        ),
+    )
+    """Outside color of map, in `r, g, b, a` form. Each value is a float <= 1.
+
+    Optional."""
+    world_size: int = field(validator=instance_of(int))
+    """Size of map in meters. Arma 3 maps are square."""
+
+    # unsupported attributes: grids

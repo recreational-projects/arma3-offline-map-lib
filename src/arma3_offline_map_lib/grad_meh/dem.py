@@ -34,48 +34,18 @@ _ESRI_ASCII_HEADER_PARAMETERS = {
 
 @define(kw_only=True, frozen=True)
 class DEM:
-    """Digital Elevation Model class, storing elevation as a NumPy array.
+    """Digital Elevation Model class that stores elevation as a NumPy array.
 
-    Ref: https://desktop.arcgis.com/en/arcmap/latest/manage-data/raster-and-images/esri-ascii-raster-format.htm
-
-    Handles non-square rasters, although Arma 3 does not support them.
+    Allows non-square rasters, although Arma 3 does not support them.
     """
-
-    elevation: NDArray[np.float16]
-    """Elevation data."""
-    cell_size: float = field(validator=[instance_of(float), gt(0)])
-    """Equivalent to ESRI ASCII `CELLSIZE`."""
-
-    @property
-    def data_size(self) -> IntPosition2D:
-        """Data dimensions.
-
-        Equivalent to ESRI ASCII `NCOLS`, `NROWS`.
-        """
-        return IntPosition2D(x=self.elevation.shape[1], y=self.elevation.shape[0])
-
-    @property
-    def extents(self) -> Position2D:
-        """Physical dimensions in meters."""
-        return Position2D(
-            x=self.cell_size * self.data_size.x,
-            y=self.cell_size * self.data_size.y,
-        )
-
-    @property
-    def land(self) -> NDArray[np.bool_]:
-        """Boolean array, where `True` indicates terrain above sea level."""
-        return (self.elevation > 0).astype(bool)
-
-    @property
-    def land_area(self) -> float:
-        """Area of terrain above sea level in square meters."""
-        return int(np.sum(self.land)) * self.cell_size**2
 
     @classmethod
     def from_esri_ascii_raster_gz(cls, file_path: Path) -> Self:
-        """Load an ESRI ASCII raster from a gzipped file (`*.asc.gz`),
-        as exported by `gruppe-adler/grad_meh`.
+        """Create a `DEM` instance from a gzipped
+        [Esri ASCII raster](https://desktop.arcgis.com/en/arcmap/latest/manage-data/raster-and-images/esri-ascii-raster-format.htm)
+        file (`*.asc.gz`),
+        as exported by
+        [`gruppe-adler/grad_meh`](https://github.com/gruppe-adler/grad_meh).
         """
         header = {}
         with gzip.open(file_path, "rt") as file:
@@ -101,6 +71,37 @@ class DEM:
             cell_size=header["CELLSIZE"],
         )
 
+    cell_size: float = field(validator=[instance_of(float), gt(0)])
+    """Cell size in meters. Greater than 0. Equivalent to Esri ASCII `CELLSIZE`."""
+    elevation: NDArray[np.float16]
+    """Elevation data."""
+
+    @property
+    def data_size(self) -> IntPosition2D:
+        """Data dimensions.
+
+        Equivalent to Esri ASCII `NCOLS`, `NROWS`.
+        """
+        return IntPosition2D(x=self.elevation.shape[1], y=self.elevation.shape[0])
+
+    @property
+    def extents(self) -> Position2D:
+        """Physical dimensions in meters."""
+        return Position2D(
+            x=self.cell_size * self.data_size.x,
+            y=self.cell_size * self.data_size.y,
+        )
+
+    @property
+    def land(self) -> NDArray[np.bool_]:
+        """Boolean array, where `True` indicates terrain above sea level."""
+        return (self.elevation > 0).astype(bool)
+
+    @property
+    def land_area(self) -> float:
+        """Area of terrain above sea level in square meters."""
+        return int(np.sum(self.land)) * self.cell_size**2
+
     def export_land_sea_image(
         self,
         *,
@@ -109,7 +110,8 @@ class DEM:
         sea_color: tuple[int, int, int],
     ) -> None:
         """Export an image file,
-        where land pixels are `land_color` and sea pixels are colored `sea_color`.
+        where pixels above sea level are `land_color` and the remainder are `sea_color`.
+        Format is determined from the filename extension ([more info](https://pillow.readthedocs.io/en/stable/reference/Image.html#PIL.Image.Image.save)).
         """
         onebit_im = Image.fromarray(self.land)
         grayscale_im = onebit_im.convert(mode="L")
