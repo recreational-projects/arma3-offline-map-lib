@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from arma3_offline_map_lib.mission.mission_sqm import MissionSqm
+from arma3_offline_map_lib.mission_sqm import MissionSqm
 
 
 def test_mission_sqm_from_file_happy_path() -> None:

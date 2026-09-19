@@ -1,4 +1,4 @@
-"""Parse a mission's `mission.sqm` file with `armaclass`."""
+"""Provides a partial interface for an Arma 3 mission's `mission.sqm` file."""
 
 from __future__ import annotations
 
@@ -23,9 +23,6 @@ _LOGGER = logging.getLogger(__name__)
 class MissionSqm:
     """Data from a mission's `mission.sqm` file."""
 
-    markers: list[Marker]
-    """Markers from all layers."""
-
     @classmethod
     def from_file(cls, filepath: Path) -> Self:
         """Parse a `mission.sqm` file. Must not be binarized."""
@@ -36,21 +33,13 @@ class MissionSqm:
         markers_ = _collect_markers(mission_sqm_data["Mission"])
         return cls(markers=markers_)
 
+    markers: list[Marker]
+    """Markers from all layers."""
+
 
 @define(kw_only=True, frozen=True)
 class Marker:
     """Represents a map marker."""
-
-    name: str = field(validator=instance_of(str))
-    """Corresponds to 'Variable Name' in the editor."""
-    position: Position2D
-    """NB: markers don't have a settable Z (height) position in the editor."""
-    marker_type: Literal["ELLIPSE", "RECTANGLE"] | None = field(
-        validator=optional(in_({"ELLIPSE", "RECTANGLE"}))
-    )
-    """Area markers have a value; icon markers have `None`."""
-    type_: str = field(validator=instance_of(str))
-    """For area markers, same as `marker_type`, but lowercase."""
 
     @classmethod
     def from_data(cls, data: DictNode) -> Self:
@@ -65,6 +54,17 @@ class Marker:
             marker_type=data.get("markerType"),
             type_=data["type"],
         )
+
+    name: str = field(validator=instance_of(str))
+    """Corresponds to 'Variable Name' in the editor."""
+    position: Position2D
+    """NB: markers don't have a settable Z (height) position in the editor."""
+    marker_type: Literal["ELLIPSE", "RECTANGLE"] | None = field(
+        validator=optional(in_({"ELLIPSE", "RECTANGLE"}))
+    )
+    """Area markers have a value; icon markers have `None`."""
+    type_: str = field(validator=instance_of(str))
+    """For area markers, same as `marker_type`, but lowercase."""
 
 
 def _collect_markers(node: DictNode) -> list[Marker]:
