@@ -31,25 +31,26 @@ def geojson_gz_files_in_dir(path: Path) -> list[Path]:
     return [p for p in list(path.iterdir()) if p.suffixes == [".geojson", ".gz"]]
 
 
-def load_features_from_file(path: Path) -> list[Feature]:
-    """Load GeoJSON-like features from a file (`*.geojson.gz`),
-    as exported by `gruppe-adler/grad_meh`.
-
-    NB: These files are gzipped arrays of GeoJSON-like features (`Position` differs),
-    not GeoJSON compliant files.
-    """
-    with gzip.open(path, "rt", encoding="utf-8") as file:
-        try:
-            features = msgspec.json.decode(file.read(), type=list[Feature])
-        except msgspec.ValidationError as err:
-            err_msg = f"Error decoding JSON: {path}."
-            raise ValueError(err_msg) from err
-
-    return features
-
-
 class Feature(msgspec.Struct, tag=True):
     """Feature class."""
+
+    @classmethod
+    def list_from_file(cls, path: Path) -> list[Feature]:
+        """Return a `list` of `Feature`s from a file (`*.geojson.gz`),
+        as exported by `gruppe-adler/grad_meh`.
+
+        NB: These files are gzipped arrays of GeoJSON-like features
+        (`Position` differs),
+        not GeoJSON compliant files containing `FeatureCollection`s.
+        """
+        with gzip.open(path, "rt", encoding="utf-8") as file:
+            try:
+                features = msgspec.json.decode(file.read(), type=list[Feature])
+            except msgspec.ValidationError as err:
+                err_msg = f"Error decoding JSON: {path}."
+                raise ValueError(err_msg) from err
+
+        return features
 
     properties: DictNode
     geometry: Geometry
