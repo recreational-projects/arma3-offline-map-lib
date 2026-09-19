@@ -1,4 +1,6 @@
-"""Top-level package.
+"""[Repository](https://github.com/recreational-projects/arma3-offline-map-lib)
+
+[Changelog](https://github.com/recreational-projects/arma3-offline-map-lib/blob/main/CHANGELOG.md)
 
 Submodules:
 * `arma3_offline_map_lib.grad_meh` provides an interface for Arma 3 map data
