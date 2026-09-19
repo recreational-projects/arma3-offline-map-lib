@@ -6,7 +6,6 @@ readme = "README.md"
 authors = [
     { name = "recreational-projects", email = "205627218+recreational-projects@users.noreply.github.com" }
 ]
-urls = { "source" = "https://github.com/recreational-projects/arma3-offline-map-lib" }
 requires-python = ">=3.12"
 dependencies = [
     "armaclass>=0.2.2",
@@ -15,6 +14,11 @@ dependencies = [
     "numpy>=2.3.5",
     "pillow>=12.3.0",
 ]
+
+[project.urls]
+Documentation = "https://recreational-projects.github.io/arma3-offline-map-lib/"
+Repository = "https://github.com/recreational-projects/arma3-offline-map-lib"
+Changelog = "https://github.com/recreational-projects/arma3-offline-map-lib/blob/main/CHANGELOG.md"
 
 [build-system]
 requires = ["uv_build>=0.12.5,<0.13.0"]
