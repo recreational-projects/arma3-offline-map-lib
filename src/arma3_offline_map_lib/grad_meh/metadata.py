@@ -67,7 +67,7 @@ class Metadata:
     """Latitude of map."""
     longitude: float = field(validator=instance_of(float))
     """Longitude of map."""
-    version: str = field(validator=instance_of(str))
+    version: str = field(converter=str, validator=instance_of(str))
     """Version of [`gruppe-adler/grad_meh`](https://github.com/gruppe-adler/grad_meh)
     that exported the metadata."""
     color_outside: tuple[float, float, float, float] | None = field(
