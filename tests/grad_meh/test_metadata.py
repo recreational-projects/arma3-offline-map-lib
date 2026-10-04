@@ -27,3 +27,14 @@ def test_from_file_happy_path() -> None:
         1.0,
     )
     assert m.world_size == 8192
+
+
+def test_from_file_no_optional_data() -> None:
+    """Tests that `Metadata.from_file()` returns a valid `Metadata` object."""
+    # arrange
+    path = Path(__file__).parent / "test_meta_no_optional_data.json"
+    # act
+    m = Metadata.from_file(path)
+    # assert
+    assert m
+    assert m.color_outside is None

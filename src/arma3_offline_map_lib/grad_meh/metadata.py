@@ -5,8 +5,10 @@ exported by [`gruppe-adler/grad_meh`](https://github.com/gruppe-adler/grad_meh).
 from __future__ import annotations
 
 import json
+from collections.abc import Iterable
 from typing import TYPE_CHECKING, Self
 
+from attr.validators import optional
 from attrs import define, field
 from attrs.validators import deep_iterable, instance_of, le, max_len, min_len
 
@@ -34,6 +36,10 @@ class Metadata:
         with path.open("rt") as fp:
             data_ = json.load(fp)
 
+        color_outside_value = data_.get("colorOutside")
+        if isinstance(color_outside_value, Iterable):
+            color_outside_value = tuple(color_outside_value)
+
         return cls(
             world_name=data_["worldName"],
             author=data_["author"],
@@ -43,7 +49,7 @@ class Metadata:
             longitude=data_["longitude"],
             elevation_offset=data_["elevationOffset"],
             version=data_["version"],
-            color_outside=tuple(data_["colorOutside"]),
+            color_outside=color_outside_value,
             world_size=data_["worldSize"],
         )
 
@@ -66,9 +72,11 @@ class Metadata:
     that exported the metadata."""
     color_outside: tuple[float, float, float, float] | None = field(
         default=None,
-        validator=deep_iterable(
-            member_validator=(instance_of(float), le(1)),
-            iterable_validator=(instance_of(tuple), min_len(4), max_len(4)),
+        validator=optional(
+            deep_iterable(
+                member_validator=(instance_of(float), le(1)),
+                iterable_validator=(instance_of(tuple), min_len(4), max_len(4)),
+            ),
         ),
     )
     """Outside color of map, in `r, g, b, a` form. Each value is a float <= 1.
