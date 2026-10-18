@@ -16,6 +16,17 @@ def test_mission_sqm_from_file_happy_path() -> None:
     assert len(mission_sqm.markers) == 75
 
 
+def test_mission_sqm_from_file_issue_tbd() -> None:
+    """Tests that `MissionSqm.from_file()` returns a valid `MissionSqm` object."""
+    # arrange
+    path = Path(__file__).parent / "au_blud_vidda_mission.sqm"
+    # act
+    mission_sqm = MissionSqm.from_file(path)
+    # assert
+    assert mission_sqm
+    assert len(mission_sqm.markers) == 212
+
+
 def test_area_marker_happy_path() -> None:
     """Tests area `Marker`."""
     # arrange
