@@ -8,4 +8,4 @@ Submodules:
 * `arma3_offline_map_lib.mission_sqm`
    provides a partial interface for an Arma 3 `mission.sqm` file.
 * `arma3_offline_map_lib.position_2d` provides a `Position2D` class.
-"""    # noqa: D415
+"""  # noqa: D415
