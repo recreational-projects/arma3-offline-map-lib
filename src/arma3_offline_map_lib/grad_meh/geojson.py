@@ -47,8 +47,8 @@ class Feature(msgspec.Struct, tag=True):
             try:
                 features = msgspec.json.decode(file.read(), type=list[Feature])
             except msgspec.ValidationError as err:
-                err_msg = f"Error decoding JSON: {path}."
-                raise ValueError(err_msg) from err
+                err.add_note(f"Error decoding GeoJSON features: {path}.")
+                raise msgspec.ValidationError from err
 
         return features
 
