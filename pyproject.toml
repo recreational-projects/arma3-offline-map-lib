@@ -28,9 +28,9 @@ build-backend = "uv_build"
 dev = [
     "pdoc>=16.0.0",
     "pre-commit>=4.7.0",
-    "pyrefly>=1.4.0",
-    "pytest>=9.1.1",
-    "ruff>=0.17.2",
+    "pyrefly>=1.4.1",
+    "pytest>=9.2.0",
+    "ruff>=0.17.4",
 ]
 
 [tool.ruff.lint]
@@ -65,3 +65,4 @@ preset = "strict"
 
 [tool.uv]
 resolution = "lowest-direct"
+exclude-newer = "7 days"
